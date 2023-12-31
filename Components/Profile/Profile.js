@@ -1,11 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View,Switch} from 'react-native'
+import React, { useState } from 'react'
+import Screen from '../../Screen'
+import DarkModeSwitch from '../Settings/DarkModeSwitch'
 
 const Profile = () => {
+  const [isEnabled,setisEnabled] = useState(false)
   return (
-    <View>
+    <Screen>
+      
       <Text>Profile</Text>
-    </View>
+      <DarkModeSwitch />
+    </Screen>
   )
 }
 

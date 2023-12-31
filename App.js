@@ -1,82 +1,180 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import * as SecureStorage from "expo-secure-store";
 
-import Home from './Components/Home/Home';
-import Profile from './Components/Profile/Profile';
-import Notification from './Components/Notification/Notification';
-import { color } from './config';
-import WellComeScreen from './Components/Auth/WellComeScreen';
-import LoginScreen from './Components/Auth/LoginScreen';
-import SignUpScreen from './Components/Auth/SignUpScreen';
+import Home from "./Components/Home/Home";
+import Profile from "./Components/Profile/Profile";
+import Notification from "./Components/Notification/Notification";
+import { baseUrl, color } from "./config";
+import WellComeScreen from "./Components/Auth/WellComeScreen";
+import LoginScreen from "./Components/Auth/LoginScreen";
+import SignUpScreen from "./Components/Auth/SignUpScreen";
+import ClearStackNavigation from "./ClearStackNavigation";
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
-import  {MaterialCommunityIcons,Ionicons, MaterialIcons}from '@expo/vector-icons'
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+import {
+  MaterialCommunityIcons,
+  Ionicons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 
+import DarkModeContext from "./Components/Context/DarkModeContext";
+import AuthContext from "./Components/Context/AuthContext";
+import axios from "axios";
 
+const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+const TopTab = createMaterialTopTabNavigator();
 
-const Tab = createBottomTabNavigator()
-const Stack = createStackNavigator()
-const TopTab = createMaterialTopTabNavigator()
+const MainPageScreens = () => {
+  const { darkMode } = useContext(DarkModeContext);
 
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        tabBarShowLabel: false,
+        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: darkMode ? color.darkBackground : "white",
+          borderTopWidth: 0,
+        },
+      }}
+    >
+      <Tab.Screen
+        name="mainHome"
+        component={Home}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <MaterialCommunityIcons
+              name="church"
+              color={focused ? color.activeGolden : color.darkGolden}
+              size={focused ? 30 : 20}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="mainNotification"
+        component={Notification}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <MaterialCommunityIcons
+              name="bell"
+              color={focused ? color.activeGolden : color.darkGolden}
+              size={focused ? 30 : 20}
+            />
+          ),
+          tabBarBadge: 3,
+        }}
+      />
+      <Tab.Screen
+        name="mainProfile"
+        component={Profile}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name="person-sharp"
+              color={focused ? color.activeGolden : color.darkGolden}
+              size={focused ? 30 : 20}
+            />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
 
-const MainPageScreens = ()=>{
-  return(
-    <Tab.Navigator screenOptions={{tabBarShowLabel:false,headerShown:false}}>
-    <Tab.Screen name = "mainHome" component = {Home} 
-      options = {{
-        tabBarIcon:({focused})=><MaterialCommunityIcons name='church' color={focused?color.activeGolden:color.darkGolden} size = {focused?30:20}  />,
-  
-        }} />
-    <Tab.Screen name = "mainNotification" component = {Notification} 
-    options = {{
-        tabBarIcon:({focused})=><MaterialCommunityIcons name='bell' color={focused?color.activeGolden:color.darkGolden} size = {focused?30:20}  />,
-        tabBarBadge:3
-
-        }}  />
-    <Tab.Screen name = "mainProfile" component = {Profile} 
-     options = {{
-        tabBarIcon:({focused})=><Ionicons name='person-sharp' color={focused?color.activeGolden:color.darkGolden} size = {focused?30:20}  />,
-  
-        }}  />
-  </Tab.Navigator>
-  )
-}
-
-const AuthTopNav = ()=>{
-  return(
-    <TopTab.Navigator style={{marginTop:24}} screenOptions={{tabBarLabelStyle:{color:color.darkGolden},tabBarIndicatorStyle:{backgroundColor:color.darkGolden}}}>
-      <TopTab.Screen name = 'auth-toptab-signup' component={SignUpScreen} options={{title:"SignUp"}} />
-      <TopTab.Screen name = 'auth-toptab-login' component={LoginScreen} options={{title:"LogIn"}} />
+const AuthTopNav = () => {
+  const { darkMode } = useContext(DarkModeContext);
+  return (
+    <TopTab.Navigator
+      style={{ marginTop: 24 }}
+      screenOptions={{
+        tabBarLabelStyle: { color: color.darkGolden },
+        tabBarIndicatorStyle: { backgroundColor: color.darkGolden },
+      }}
+    >
+      <TopTab.Screen
+        name="auth-toptab-signup"
+        component={SignUpScreen}
+        options={{ title: "SignUp" }}
+      />
+      <TopTab.Screen
+        name="auth-toptab-login"
+        component={LoginScreen}
+        options={{ title: "LogIn" }}
+      />
     </TopTab.Navigator>
-  )
-}
+  );
+};
 
-const AuthSceens = ()=>{
-  return(
-    <Stack.Navigator screenOptions={{headerShown:false}}>
-      <Stack.Screen name = 'wellcomeSceen' component={WellComeScreen} />
-      <Stack.Screen name = 'auth-main-screen' component={AuthTopNav} />
+const AuthSceens = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="wellcomeSceen" component={WellComeScreen} />
+      <Stack.Screen name="auth-main-screen" component={AuthTopNav} />
     </Stack.Navigator>
-  )
-}
-
-
+  );
+};
 
 export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown:false}}>
-        <Stack.Screen name = 'wellcome-main-container' component={AuthSceens} />
-        <Stack.Screen name = 'main-page-container' component={MainPageScreens}  />
-      </Stack.Navigator>
+  const [darkMode, setDarkMode] = useState(false);
+  const [auth, setAuth] = useState(null);
+  const [authTookns,setAuthTookns] = useState(null)
 
-    </NavigationContainer>
+  const getAuth = async () => {
+    try {
+      const authToken = await SecureStorage.getItemAsync("auth");
+      if(authToken){
+        setAuthTookns(JSON.parse(authToken))
+        let headers=  {
+          'Authorization':`JWT ${JSON.parse(authToken).access}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }
+        const currentUserInfo = await axios.get(`${baseUrl}/auth/users/me/`,{headers})
+        setAuth(currentUserInfo.data)
+        console.log(currentUserInfo.data,'status')
+      }
+    } catch (error) {
+      console.log(error,'error');
+    }
+  };
+
+  useEffect(() => {
+    getAuth();
+  }, []);
+  useEffect(()=>{
+    console.log('hellow that is all i need to know')
+    console.log(authTookns,'core')
+  },[authTookns])
+
+  return (
+    <DarkModeContext.Provider value={{ darkMode, setDarkMode }}>
+      <AuthContext.Provider value={{auth,authTookns}}>
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen
+              name="wellcome-main-container"
+              component={AuthSceens}
+            />
+            <Stack.Screen
+              name="main-page-container"
+              component={MainPageScreens}
+            />
+            <Stack.Screen
+              name="clear-stack-navigation"
+              component={ClearStackNavigation}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </AuthContext.Provider>
+    </DarkModeContext.Provider>
   );
 }
 
-const styles = StyleSheet.create({
-
-});
+const styles = StyleSheet.create({});

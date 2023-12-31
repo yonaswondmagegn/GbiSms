@@ -1,18 +1,30 @@
 import { StyleSheet, Text, View,TouchableWithoutFeedback,Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import React from 'react'
+import React, { useEffect,useState } from 'react'
 
 
 const EachPost = ({item,url}) => {
-    const navigate = useNavigation()
+    const [formattedDate,setFormatedData] = useState()
+    const navigation = useNavigation()
+
+    useEffect(()=>{
+        const date = new Date(item.date)
+        const fDate = new Intl.DateTimeFormat('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+        }).format(date);
+        setFormatedData(fDate)
+    },[])
   return (
-    <TouchableWithoutFeedback onPress={()=>navigate.navigate('main-detail-page',{item})}>
         <View style={[styles.container,{marginTop:url?20:5}]}>
-            {console.log(item,'teh first one')}
-            <Image source={{uri:item.image}} style={styles.postImage}/>
-            <Text numberOfLines={1} style={styles.titleText}>{item.title}</Text>
-            <Text numberOfLines={2} style={styles.descriptionText}>{item.description}</Text>
-            {!url && <TouchableWithoutFeedback onPress={()=>navigate.navigate('other-profile-page',{profile:item.user})}>
+            <Text  style={styles.titleText}>{item.title}</Text>
+            <Text style={styles.descriptionText}>{item.description}</Text>
+            <Text style={styles.date}>{formattedDate}</Text>
+            {!url && <TouchableWithoutFeedback onPress={()=>navigation.navigate('other-profile-page',{profile:item.user})}>
 
                 <View style={styles.profileContainer}>
                     <Image style={styles.profileImage} source={{uri:item.user.image}} />
@@ -23,7 +35,6 @@ const EachPost = ({item,url}) => {
                 </View>
             </TouchableWithoutFeedback>}
         </View>
-    </TouchableWithoutFeedback>
   )
 }
 
@@ -58,35 +69,12 @@ const styles = StyleSheet.create({
         fontSize:13
     },titleText:{
         // fontWeight:2 
+        fontWeight:'800'
+    },date:{
+        alignSelf:'flex-end',
+        margin:10,
+        fontSize:14,
+        fontStyle:'italic',
+        fontWeight:'100'
     }
 })
-// {
-//     "id": 1,
-//     "user": {
-//         "id": 1,
-//         "major": null,
-//         "user": {
-//             "username": "SignalTest",
-//             "first_name": "",
-//             "last_name": "",
-//             "phonenumber": "0987787"
-//         },
-//         "authority": null,
-//         "image": "http://127.0.0.1:8000/profile.jpg",
-//         "aastu_id_main": null,
-//         "aastu_id_year": null,
-//         "acadamic_year": "NR",
-//         "bio": "",
-//         "date": "2023-11-08T12:59:09Z",
-//         "group": [
-//             1
-//         ]
-//     },
-//     "title": "First tesest post",
-//     "image": "http://127.0.0.1:8000/anouncement_images/jack.jpg",
-//     "description": "descriptoin for the first post",
-//     "date": "2023-11-09T08:40:45Z",
-//     "target_group": [
-//         1
-//     ]
-// }

@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Button } from "react-native";
-import React from "react";
+import { StyleSheet, Text, View, Button,ActivityIndicator} from "react-native";
+import React, { useContext } from "react";
 import AppTextInput from "../../AppComponents/AppTextInput";
 import AppButton from "../../AppComponents/AppButton";
 import ErrorText from "../../AppComponents/ErrorText";
@@ -10,7 +10,7 @@ import useAuth from "./useAuth";
 import * as SecureStorage from 'expo-secure-store'
 import { useEffect } from "react";
 import{ jwtDecode} from "jwt-decode";
-
+import DarkModeContext from "../Context/DarkModeContext";
 
 const validSchema = object({
   idCard:number().required().label("Id Number").test('len',"Id Number Must be 4 Characters ",val=>val.toString().length ===4),
@@ -21,19 +21,22 @@ const validSchema = object({
   password: string().min(8).required().label("PassWord"),
 });
 
-
-
-
 const SignUpScreen = ({ navigation }) => {
-  const {signup,error} = useAuth()
+  const {signup,error,signUpLaoding} = useAuth()
+  const {darkMode} = useContext(DarkModeContext)
 
   const getAuthTooken = async ()=>{
-    const result = await SecureStorage.getItemAsync('auth')
-    if(result){
-        let a = JSON.parse(result).access
-        const tooken = jwtDecode(a)
-        console.log(tooken)
-      // console.log(jwtDecode(JSON.parse(result)).access)
+    try {
+      const result = await SecureStorage.getItemAsync('auth')
+      if(result){
+          let a = JSON.parse(result).access
+          const tooken = jwtDecode(a)
+          console.log(tooken)
+        // console.log(jwtDecode(JSON.parse(result)).access)
+      }
+      
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -42,8 +45,9 @@ const SignUpScreen = ({ navigation }) => {
   },[])
 
   return (
-    <>
+    <View>
     {error && <ErrorText error="something Wrong Try again" />}
+    {signUpLaoding && <ActivityIndicator size={50} color={color.darkGolden} />}
     <Formik
       initialValues={{
         idCard: "",
@@ -134,7 +138,7 @@ const SignUpScreen = ({ navigation }) => {
       </View>
       )}
     </Formik>
-  </>
+  </View>
   );
 };
 

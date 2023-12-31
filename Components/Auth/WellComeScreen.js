@@ -1,21 +1,25 @@
-import { StyleSheet, Text, View,Image} from 'react-native'
+import { StyleSheet, Text, View,Image, ImageBackground,StatusBar} from 'react-native'
 import { color } from '../../config'
 import React from 'react'
 import AppButton from '../../AppComponents/AppButton'
 import { useNavigation } from '@react-navigation/native'
 
 
+
 const WellComeScreen = ({navigation}) => {
   const navigate = useNavigation()
   return (
     <View style= {styles.container}>
-      <View style = {styles.topCont}>
-        <Image style={styles.logoImage} source={require('../../assets/wedeGubaie.png')}/>
-        <Text style={styles.davidMoto}>ወደ አግዚአብሄር ቤት አንሂድ ባሉኝ ጊዜ ደስ አለኝ።</Text>
-        <Text style = {styles.davidNum}>መዝ __፡__</Text>
-      </View>
-      <AppButton title = 'Sign Up' bgColor={color.smoke} onPress={()=>navigation.navigate('main-page-container')} />
-      <AppButton title = 'Login' bgColor= {color.smoke} onPress={()=>navigation.navigate('auth-main-screen',{screen:'auth-toptab-login'})}/>
+      <ImageBackground source={require("../../assets/lal.jpg")} style={{width:"100%",height:"100%"}}>
+        <View style = {styles.topCont}>
+          <Image style={styles.logoImage} source={require('../../assets/wedeGubaie.png')}/>
+          <Text style={styles.davidMoto}>ወደ አግዚአብሄር ቤት አንሂድ ባሉኝ ጊዜ ደስ አለኝ።</Text>
+          <Text style = {styles.davidNum}>መዝ __፡__</Text>
+        </View>
+        <AppButton title = 'Sign Up' bgColor={color.smoke} onPress={()=>navigation.navigate('main-page-container')} />
+        <AppButton title = 'Login' bgColor= {color.smoke} onPress={()=>navigation.navigate('auth-main-screen',{screen:'auth-toptab-login'})}/>
+      </ImageBackground>
+      {false &&<StatusBar/>}
     </View>
   )
 }
@@ -24,8 +28,9 @@ export default WellComeScreen
 
 const styles = StyleSheet.create({
     container:{
+
         backgroundColor:'white',
-        flex:1
+        flex:1,
     },
     logoImage:{
       alignSelf:'center',
@@ -37,13 +42,15 @@ const styles = StyleSheet.create({
       alignSelf:'center',
       textAlign:'center',
       margin:20,
-      color:color.darkGolden,
+      // color:color.darkGolden,
+      color:'white',
       fontSize:20,
     },
     davidNum:{
       alignSelf:'flex-end',
       marginRight:30,
-      color:color.darkGolden,
+      // color:color.darkGolden,
+      color:'white',
     },
     topCont:{
       flex:1

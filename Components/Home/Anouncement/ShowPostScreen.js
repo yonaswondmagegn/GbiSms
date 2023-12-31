@@ -47,8 +47,12 @@ const ShowPostScreen = ({url}) => {
           
           keyExtractor={item=>item?.id?.toString()}
           key={item=>item?.id}
+          ListFooterComponent={()=>(
+            <>
+            <SeeMoreButton onPress={seeMoreHandler} />
+            </>
+          )}
         />
-        <SeeMoreButton onPress={seeMoreHandler} />
      
       </>
   )

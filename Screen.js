@@ -13,6 +13,6 @@ export default Screen
 
 const styles = StyleSheet.create({
     container:{
-        marginTop:100
+        marginTop:20
     }
 })

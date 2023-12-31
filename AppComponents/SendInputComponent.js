@@ -1,19 +1,17 @@
-import { StyleSheet, Text, View,TextInput,ScrollView,TouchableWithoutFeedback} from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View,TextInput,ScrollView,TouchableWithoutFeedback,KeyboardAvoidingView} from 'react-native'
+import React,{forwardRef} from 'react'
 import { MaterialCommunityIcons,AntDesign,FontAwesome } from '@expo/vector-icons'
 import {color} from './../config'
 
-const SendInputComponent = ({placeholder,icon,style,sendOnPress,...other}) => {
-  return (
+const SendInputComponent =({placeholder,icon,style,sendOnPress,...other}) => {
 
+  return (
     <View style = {[styles.container,style]} >
         <MaterialCommunityIcons color="#696969" style ={styles.icon} name = {icon} size={24}/>
-        <ScrollView style = {{}}>
             <TextInput 
             multiline  
             style ={[styles.textarea]} 
             placeholder={placeholder} {...other} />
-        </ScrollView>
         <TouchableWithoutFeedback onPress={sendOnPress}>
 
             <FontAwesome name='send' size={24} style = {styles.sendIcon} />

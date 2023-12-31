@@ -1,69 +1,82 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { baseUrl } from "../../config";
-import * as SecureStorage from 'expo-secure-store'
+import * as SecureStorage from "expo-secure-store";
 import { useNavigation } from "@react-navigation/native";
 
+const useAuth = () => {
+  const [error, setError] = useState();
+  const [signUpLaoding, setSignUpLoading] = useState(false);
+  const [loginLoading,setLoginLoading] = useState(false)
+  const navigation = useNavigation();
 
-const useAuth = ()=>{
-    const [error,setError] = useState()
-    const navigation = useNavigation()
-
-    const logIn = async (username,password)=>{
-        if(!username || !password)return;
-        try {
-            const result = await axios.post(`${baseUrl}/auth/jwt/create/`,{
-                username,
-                password
-            })
-            console.log(result.data,'data')
-            navigation.navigate('main-page-container')
-            const auths = await SecureStorage.setItemAsync('auth',JSON.stringify(result.data))
-        } catch (error) {
-            setError(error)
-            console.log(error,'error occured')
-
-        }
+  const logIn = async (username, password) => {
+    if (!username || !password) return;
+    setLoginLoading(true)
+    setError(false)
+    try {
+      const result = await axios.post(`${baseUrl}/auth/jwt/create/`, {
+        username,
+        password,
+      });
+      const auths = await SecureStorage.setItemAsync(
+          "auth",
+          JSON.stringify(result.data)
+          );
+          console.log(result.data.access,'acess data')
+          navigation.navigate("main-page-container");
+          setLoginLoading(false)
+          setSignUpLoading(false)
+    } catch (error) {
+      setError(error);
+      setLoginLoading(false)
+      console.log(error, "error occured");
     }
+  };
 
-    const signup = async (username,password,first_name,last_name ,phonenumber)=>{
-        try{
-            const result = await axios.post(`${baseUrl}/auth/users/`,{
-                username,
-                first_name,
-                last_name,
-                phonenumber,
-                password,
-            },)
-            
-            if(result){
-                console.log(result)
-                logIn(username,password)
-            }
-            
-        }catch(err){
-            setError(err) 
-            console.log(err)   
-        }
-   
+  const signup = async (
+    username,
+    password,
+    first_name,
+    last_name,
+    phonenumber
+  ) => {
+    setSignUpLoading(true)
+    setError(false)
+
+    try {
+      const result = await axios.post(`${baseUrl}/auth/users/`, {
+        username,
+        first_name,
+        last_name,
+        phonenumber:phonenumber.substring(1),
+        password,
+      });
+      if (result) {
+        logIn(username, password);
+      }
+    } catch (err) {
+      setError(err);
+      setSignUpLoading(false);
     }
+  };
 
-    const getTooken = async ()=>{
-        const tookn = null
-        // try {    
-        //     const result = await SecureStorage.getItemAsync('auth')
-        //     if(result){
-        //         tookn = a
-        //     }else{
-        //         return null
-        //     }
-        // } catch (error) {
-        //     setError(error)
-        // }
-        return 'tooken recived'
-    }
+  const getTooken = async () => {
+    const tookn = null;
+    // try {
+    //     const result = await SecureStorage.getItemAsync('auth')
+    //     if(result){
+    //         tookn = a
+    //     }else{
+    //         return null
+    //     }
+    // } catch (error) {
+    //     setError(error)
+    // }
+    return "tooken recived";
+  };
 
-    return {logIn,signup,getTooken,error}
-}
+  return { logIn, signup, getTooken, error, signUpLaoding,loginLoading };
+};
 
-export default useAuth
+export default useAuth;

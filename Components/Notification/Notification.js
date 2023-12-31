@@ -1,11 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import Screen from '../../Screen'
+import * as Notifications from 'expo-constants'
 
 const Notification = () => {
   return (
-    <View>
+    <Screen>
       <Text>Notification</Text>
-    </View>
+    </Screen>
   )
 }
 

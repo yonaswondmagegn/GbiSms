@@ -27,7 +27,6 @@ const ListOfGroupsScreen = () => {
     },[])
   return (
     <View>
-      {console.log(group,'from the bveiasdfjaiosjfioejfojsofijiofnq')}
        <FlatList 
        data={group}
        renderItem={({item})=><EachListComponent group={item} />}
