@@ -1,13 +1,31 @@
 import { StyleSheet, Text, View,Image, ImageBackground,StatusBar} from 'react-native'
 import { color } from '../../config'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import AppButton from '../../AppComponents/AppButton'
 import { useNavigation } from '@react-navigation/native'
+import * as Notification from 'expo-notifications'
 
 
 
 const WellComeScreen = ({navigation}) => {
-  const navigate = useNavigation()
+  // const navigation  = useNavigation()
+  const notificationResponse = useRef()
+
+  useEffect(()=>{
+    notificationResponse.current = Notification.addNotificationResponseReceivedListener(response=>
+      navigation.navigate('main-page-container', {
+        screen: 'mainHome',
+        params: {
+          screen: 'main-post-page',
+          params: {
+            screen: 'anouncement',
+          },
+        },
+      }))
+    return (()=>{
+      Notification.removeNotificationSubscription(notificationResponse.current)
+    })
+  },[])
   return (
     <View style= {styles.container}>
       <ImageBackground source={require("../../assets/lal.jpg")} style={{width:"100%",height:"100%"}}>

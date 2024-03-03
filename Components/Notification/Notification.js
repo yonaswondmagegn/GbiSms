@@ -1,16 +1,12 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import Screen from '../../Screen'
-import * as Notifications from 'expo-constants'
+import { useState, useEffect, useRef } from 'react';
+import { Text, View, Button, Platform } from 'react-native';
+import Calender from './Calender';
 
-const Notification = () => {
+export default function AppNotification() {
+  
   return (
-    <Screen>
-      <Text>Notification</Text>
-    </Screen>
-  )
+    <View>
+      <Calender />
+    </View>
+  );
 }
-
-export default Notification
-
-const styles = StyleSheet.create({})

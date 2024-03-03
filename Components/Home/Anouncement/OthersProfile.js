@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View,Image,ScrollView } from 'react-native'
+import { StyleSheet, Text, View,Image,ScrollView ,ImageBackground} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import {color} from '../../../config'
 import { Ionicons,MaterialIcons } from '@expo/vector-icons'
@@ -41,10 +41,15 @@ const OthersProfile = ({route}) => {
     },[profile])
 
   return (
-    <ScrollView>
+    <>
+        <ImageBackground
+        source = {require('../../../assets/pcback.jpg')}
+        >
         <View style ={styles.profileImageContainer}>
             <Image style={styles.profileImage} source={{uri:profile?.image}} />
         </View>
+        </ImageBackground>
+
         <View style = {styles.profileDiscContainer}>
 
             <Text style = {styles.usernameText}>{profile?.user?.username} {profile?.user?.last_name}</Text>
@@ -66,8 +71,7 @@ const OthersProfile = ({route}) => {
             </View>
         </View>
         <Text style ={{color:color.activeGolden,fontSize:20}}>Posts By {profile?.user?.username}</Text>
-        <ShowPostScreen url = {`${baseUrl}/anouncementPost/`} /> 
-    </ScrollView>
+    </>
   )
 }
 
@@ -75,14 +79,18 @@ export default OthersProfile
 
 const styles = StyleSheet.create({
     profileImageContainer:{
-        alignItems:'center',
-        marginTop:10
+        alignItems:'flex-end',
+        marginTop:0,
+        height:200
     },
     profileImage:{
-        width:200,
-        height:200,
+        width:100,
+        height:100,
         borderRadius:100,
-        marginTop:70
+        marginTop:120,
+        position:'absolute',
+        borderWidth:2,
+        borderColor:color.darkGolden,
     },
     usernameText:{
         color:color.darkGolden,

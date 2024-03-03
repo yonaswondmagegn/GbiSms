@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "842137732508",
+    "project_id": "for-eyob",
+    "storage_bucket": "for-eyob.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:842137732508:android:c90237a6812cecfc02b459",
+        "android_client_info": {
+          "package_name": "com.anonymous.GbiSms"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "842137732508-51teqvh1l929lhv7hffl835ql5rsu7n2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANS_wFeb-Cpk3gcJ3yd7N48SAtt5NGWh8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "842137732508-51teqvh1l929lhv7hffl835ql5rsu7n2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:842137732508:android:a020850864c5951002b459",
+        "android_client_info": {
+          "package_name": "com.yonas_dartos.GbiSms"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "842137732508-51teqvh1l929lhv7hffl835ql5rsu7n2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANS_wFeb-Cpk3gcJ3yd7N48SAtt5NGWh8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "842137732508-51teqvh1l929lhv7hffl835ql5rsu7n2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -17,7 +17,7 @@ const SendInputComponent =({placeholder,icon,style,sendOnPress,...other}) => {
             <FontAwesome name='send' size={24} style = {styles.sendIcon} />
         </TouchableWithoutFeedback>
 
-
+  
     </View>
   )
 }

@@ -6,6 +6,8 @@ import DarkModeContext from './Components/Context/DarkModeContext'
 import { color } from './config'
 import {Ionicons,MaterialCommunityIcons} from '@expo/vector-icons'
 import AddPost from './Components/Home/Post/PostDetail/AddPost/AddPost'
+import DetailCalanderScreen from './Components/Notification/DetailCalanderScreen'
+import PostScheduleScreen from './Components/Notification/PostScheduleScreen'
 
 const Stack = createStackNavigator()
 
@@ -21,6 +23,9 @@ const ClearStackNavigation = () => {
         height:30
       },title:'መተየቢያ.'}}
        />
+       <Stack.Screen name="detail-calender-screen" component={DetailCalanderScreen} 
+       options={{title:"መርሐግብራት",headerTitleStyle:{fontSize:16}}}/>
+       <Stack.Screen name = 'post-calender-screen' component={PostScheduleScreen} options={{title:''}} />
 
     </Stack.Navigator>
 

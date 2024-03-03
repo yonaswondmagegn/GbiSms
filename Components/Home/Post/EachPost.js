@@ -26,7 +26,7 @@ const EachPost = ({post}) => {
     
   return (
     <TouchableWithoutFeedback onPress={()=>navigation.navigate("clear-stack-navigation",{screen:"detail-post-page",params:{post}})}>
-      <View style = {[styles.container,{backgroundColor:darkMode?color.dark:"white"}]} >
+      <View style = {[styles.container,{backgroundColor:darkMode?'rgba(31, 31, 31, 1)':"white"}]} >
         <Text numberOfLines={3} style={[styles.titleText,{color:darkMode?"white":'black'}]}>{post.title}</Text>
         <Text style={{color:darkMode?"white":'black',alignSelf:"flex-end",marginTop:20,fontSize:10}}>{formattedDate}</Text>
         <PostFooterComponent post={post} />

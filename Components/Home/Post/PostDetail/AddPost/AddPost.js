@@ -328,6 +328,13 @@ const AddPost = () => {
 
   }
 
+
+  const onPushNotficationAcceptHandler =()=>{
+    const asyncCall = async ()=>{
+      const {status} = useSt
+    }
+  }
+
   return (
     <TouchableWithoutFeedback  onPress={()=>{
       fieldRefs.current[fragmetns.length-1].focus()

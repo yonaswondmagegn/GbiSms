@@ -1,29 +1,30 @@
 import { StyleSheet, Text, View,FlatList,ActivityIndicator,TouchableWithoutFeedback,TouchableOpacity,RefreshControl} from 'react-native'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import axios from 'axios'
-import { baseUrl, color } from '../../../config'
-import EachPost from './EachPost'
-import DarkModeContext from '../../Context/DarkModeContext'
+import { baseUrl,color } from '../../config'
+import EachPost from '../Home/Post/EachPost'
+import DarkModeContext from '../Context/DarkModeContext'
 import { createStackNavigator } from '@react-navigation/stack'
-import AuthContext from '../../Context/AuthContext'
-import ErrorText from '../../../AppComponents/ErrorText'
+import ErrorText from '../../AppComponents/ErrorText'
 import * as SecureStorage from 'expo-secure-store'
-import TryAgainButton from '../../Auth/TryAgainButton'
-import AddPost from './PostDetail/AddPost/AddPost'
+import TryAgainButton from '../Auth/TryAgainButton'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
-
-const MainPostScreen = ({navigation})=>{
+ const ProfilePost = ({footerFragemnt,profile})=>{
   const [post,setPost] = useState()
   const [error,setError] = useState()
   const [onLoad,setOnLoad] = useState(false)
-  const [uri,setUri] = useState(`${baseUrl}/post/?ordering=-id`)
+  const [uri,setUri] = useState(`${baseUrl}/post/?author=${profile?.user?.id}&ordering=-id/`)
   const {darkMode} = useContext(DarkModeContext)
   const [auth,setAuth]  = useState()
   const [refresh,setRefresh] = useState(false)
 
+  useEffect(()=>{
+    console.log(profile,'profile')
+  },[])
+
   const FechPost = async (fromRefresh)=>{
-  
+    // if(!profile)return;
     setOnLoad(true)
     let headers=  {
       'Authorization':`JWT ${auth?.access}`,
@@ -79,7 +80,7 @@ const MainPostScreen = ({navigation})=>{
     if(auth){
       FechPost()
     }
-  },[auth])
+  },[auth,profile])
 
   const seeMoreHandler = ()=>{
     if (post?.next){
@@ -95,7 +96,7 @@ const MainPostScreen = ({navigation})=>{
 
 
   return(
-    <View style = {{backgroundColor:darkMode?color.darkBackground:'white',flex:1}}>
+    <View style = {{backgroundColor:darkMode?color.darkBackground:'white',}}>
       {error &&
       <>
       <TryAgainButton fun={getAuthTooken} />
@@ -112,6 +113,7 @@ const MainPostScreen = ({navigation})=>{
           onRefresh={onRefreshHandler}
           onEndReached={seeMoreHandler}
           onEndReachedThreshold={0.1}
+          ListHeaderComponent={footerFragemnt}
           ListFooterComponent={()=>(
             <>
              {onLoad && <ActivityIndicator size={50} color={color.activeGolden} />}
@@ -122,30 +124,10 @@ const MainPostScreen = ({navigation})=>{
 
        
     </View>
-    <TouchableOpacity
-    style = {styles.addIcon} 
-    onPress={()=>navigation.navigate('clear-stack-navigation',{screen:'addpost'})}>
-        <MaterialCommunityIcons
-         
-          name='feather' size={50} 
-          color={color.darkGolden} />
-    </TouchableOpacity>
+   
    </View>
   )
 }
-
-const Stack = createStackNavigator()
-
-
-const Post = () => {
-  return (
-    <Stack.Navigator screenOptions={{headerShown:false}}>
-      <Stack.Screen name = "main-post-page" component={MainPostScreen} />
-    </Stack.Navigator>
-  )
-}
-
-export default Post
 
 const styles = StyleSheet.create({
   addIcon:{
@@ -155,3 +137,5 @@ const styles = StyleSheet.create({
     margin:10
   }
 })
+
+export default ProfilePost
