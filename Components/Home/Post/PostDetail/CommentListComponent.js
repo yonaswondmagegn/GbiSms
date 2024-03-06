@@ -1,12 +1,13 @@
 import { StyleSheet, Text, View,FlatList, TouchableOpacity,ActivityIndicator} from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import axios from 'axios'
 import { baseUrl, color } from '../../../../config'
+import DarkModeContext from '../../../Context/DarkModeContext'
 
 import EachCommentComponent from './EachCommentComponent'
-import PostComentComponent from './PostComentComponent'
 
 const CommentListComponent = ({post}) => {
+    const {darkMode} = useContext(DarkModeContext)
     const [comments,setComments] = useState()
     const [commentUrl,setcommentUrl] = useState(`${baseUrl}/postcomment/?ordering=-date&post=${post?.id}`)
     const [loading,setLoading] = useState(false)
@@ -39,7 +40,7 @@ const CommentListComponent = ({post}) => {
         if(comments?.next){
             setcommentUrl(comments?.next)
             console.log(commentUrl,'from click')
-            
+
         }
     }
 
@@ -51,13 +52,13 @@ const CommentListComponent = ({post}) => {
 
   return (
     <View>
-      <FlatList 
+      <FlatList
         data={comments?.results}
         keyExtractor={item =>item?.id?.toString()}
         renderItem={({item})=><EachCommentComponent comment={item} />}
         ListHeaderComponent={()=>(
             <>
-              <PostComentComponent post={post} setComments = {setComments} />
+              <Text style={{color:darkMode?'white':'black'}} >Comments</Text>
             </>
         )}
         ListFooterComponent={()=>(

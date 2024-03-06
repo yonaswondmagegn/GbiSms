@@ -9,6 +9,7 @@ import DarkModeContext from '../../../Context/DarkModeContext'
 import ErrorText from '../../../../AppComponents/ErrorText'
 import TryAgainButton from '../../../Auth/TryAgainButton'
 import CommentListComponent from './CommentListComponent'
+import PostComentComponent from './PostComentComponent'
 
 
 const EachFragment = ({fragment})=>{
@@ -31,11 +32,45 @@ const PostDetail = () => {
     const [loading,setLoading] = useState(false)
     const [error,setError] = useState(false)
 
+    const [comments,setComments] = useState()
+    const [commentUrl,setcommentUrl] = useState(`${baseUrl}/postcomment/?ordering=-date&post=${post?.id}`)
+
+
+    const fechCommentsHandler = async ()=>{
+        try {
+            setLoading(true)
+            setError(false)
+            const result = await axios.get(commentUrl)
+            if(comments){
+                setComments(prev=>{
+                    let newComent = result.data
+                    newComent.results = [...prev?.results,...newComent.results]
+                    return newComent
+                })
+
+            }else{
+                setComments(result.data)
+            }
+            setLoading(false)
+        } catch (error) {
+            console.log(error,'coomnet error')
+            setError(true)
+            setLoading(false)
+        }
+    }
+
+
+    useEffect(()=>{
+        fechCommentsHandler()
+        console.log(comments?.next,'next url')
+    },[commentUrl])
+
+
     const fechFragment = async ()=>{
         setLoading(true)
         setError(false)
-        
-        try {        
+
+        try {
             const response = await axios.get(`${baseUrl}/post/${post.id}/fragments/`)
             setFragments(response.data)
             setLoading(false)
@@ -78,8 +113,9 @@ const PostDetail = () => {
                         <CommentListComponent post={post} setPost={setPost}/>
                     </>
                 )}
-    
+
             />
+        <PostComentComponent post={post} setComments={setComments}/>
     </View>
   )
 }
@@ -90,7 +126,7 @@ const styles = StyleSheet.create({
     contentText:{
         marginHorizontal:6,
         fontWeight:"100",
-    
+
     },
     fragmentTitleText:{
         fontSize:16,
