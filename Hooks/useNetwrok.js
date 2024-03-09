@@ -1,12 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import * as Netwrok from 'expo-network'
+import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import * as Netwrok from "expo-network";
 
 const useNetwrok = () => {
-    
-  return {}
-}
+  return {};
+};
 
-export default useNetwrok
+export default useNetwrok;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
