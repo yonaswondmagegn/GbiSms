@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View,Image } from 'react-native'
 import React, { useContext } from 'react'
 
-import ShowPostScreen from './Anouncement/ShowPostScreen'
+import ShowPostScreen from './Announcement/ShowPostScreen'
 import GroupScreen from './Groups/GroupScreen'
 import Navigation from '../Navigation/Navigation'
 import {  color } from '../../config'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import { MaterialCommunityIcons,Ionicons,MaterialIcons} from '@expo/vector-icons'
 import { createStackNavigator } from '@react-navigation/stack'
-import OthersProfile from './Anouncement/OthersProfile'
+import OthersProfile from './Announcement/OthersProfile'
 import Post from './Post/Post'
 
 import DarkModeContext from '../Context/DarkModeContext'
@@ -24,11 +24,11 @@ const HomeTabNavigatorComponent = ()=>{
       <TopNav.Screen name = 'showPostScreen' component={Post} 
         options={{
           tabBarIcon:({focused})=><Ionicons name="md-newspaper-outline" size={24} color={focused?color.darkGolden:(darkMode?color.smoke:"black")} />}} />
-      <TopNav.Screen name='anouncement' component={ShowPostScreen} 
+      <TopNav.Screen name='announcement' component={ShowPostScreen} 
         options={{
           tabBarIcon:({focused})=>focused ?
           <Image style={{width:24,height:24}} source ={require("../../assets/announcement.png")}/>:
-          (darkMode? <Image style={{width:24,height:24}} source ={require("../../assets/smokeanouncement.png")}/>: <Image style={{width:24,height:24}} source ={require("../../assets/blackanouncement.png")}/>)
+          (darkMode? <Image style={{width:24,height:24}} source ={require("../../assets/smokeannouncement.png")}/>: <Image style={{width:24,height:24}} source ={require("../../assets/blackannouncement.png")}/>)
          }}/>
       <TopNav.Screen name='groups' component={GroupScreen} 
         options={{
