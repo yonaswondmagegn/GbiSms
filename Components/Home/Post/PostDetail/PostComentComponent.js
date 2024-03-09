@@ -12,6 +12,8 @@ const PostComentComponent = ({post,setComments}) => {
     const [onProgress,setOnProgress] = useState(false)
     const [error,setError] = useState(false)
     const {auth} = useContext(AuthContext)
+    const [commentInputValue, setCommentInputValue] = useState("")
+
 
     const onSendHandler = async ()=>{
 
@@ -26,7 +28,7 @@ const PostComentComponent = ({post,setComments}) => {
         })
         setComments(prev=>({...prev,results:[result.data,...prev.results]}))
         setOnProgress(false)
-
+        setCommentInputValue("")
       } catch (error) {
         setError(true)
         console.log(error)
@@ -35,23 +37,32 @@ const PostComentComponent = ({post,setComments}) => {
     }
 
   return (
-    <View>
+    <View style={styles.postCommentContainer}>
             <SendInputComponent
             name = "comment"
             icon = "comment"
             placeholder=
             "Type Your Comment..."
-            onChangeText = {value =>setCommentText(value)}
+            onChangeText = {value =>{
+              setCommentInputValue(value)
+              setCommentText(commentInputValue)
+            }}
             sendOnPress={onSendHandler}
+            value={commentInputValue}
             />
           {onProgress && <ActivityIndicator color={color.darkGolden} />}
           {error && <ErrorText error="SomeThing Went Wrong Try Again..." />}
-
-
     </View>
   )
 }
 
 export default PostComentComponent
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  postCommentContainer: {
+    // borderTopColor: "#ccc",
+    // borderTopWidth: 1,
+    // marginVertical: 5,
+    backgroundColor: "transparent"
+  }
+})

@@ -2,8 +2,9 @@ import { StyleSheet, Text, View,TouchableWithoutFeedback } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import PostFooterComponent from './PostFooterComponent'
 import DarkModeContext from '../../Context/DarkModeContext'
-import { color } from '../../../config'
 import { useNavigation } from '@react-navigation/native'
+import { color } from '../../../config'
+
 
 const EachPost = ({post}) => {
   const {darkMode} = useContext(DarkModeContext)
@@ -23,15 +24,17 @@ const EachPost = ({post}) => {
     setFormatedData(fDate)
   },[])
 
-    
+
   return (
     <TouchableWithoutFeedback onPress={()=>navigation.navigate("clear-stack-navigation",{screen:"detail-post-page",params:{post}})}>
-      <View style = {[styles.container,{backgroundColor:darkMode?'rgba(31, 31, 31, 1)':"white"}]} >
-        <Text numberOfLines={3} style={[styles.titleText,{color:darkMode?"white":'black'}]}>{post.title}</Text>
-        <Text style={{color:darkMode?"white":'black',alignSelf:"flex-end",marginTop:20,fontSize:10}}>{formattedDate}</Text>
-        <PostFooterComponent post={post} />
+      <View style = {[styles.container,{backgroundColor:darkMode?color.darkBackground :"#fff"}]} >
+          <View style={styles.postContainerHeader}>
+              <Text numberOfLines={3} style={[styles.titleText,{color:darkMode?"white":'black'}]}>{post.title}</Text>
+              <Text style={{color:darkMode?"white":'black',fontSize:10, fontWeight: "100"}}>{formattedDate}</Text>
+          </View>
+          <Text numberOfLines={3} style={[styles.postExerpt, {color: darkMode ? "#ccc" : "#333"}]}>{post.fragments[0].content}</Text>
+          <PostFooterComponent post={post} />
       </View>
-      
     </TouchableWithoutFeedback>
   )
 }
@@ -40,17 +43,24 @@ export default EachPost
 
 const styles = StyleSheet.create({
     container:{
-        borderWidth:1,
-        borderColor:'rgba(0, 0, 0, 0.24)',
-        padding:20,
+        padding: 12,
         borderRadius:10,
-        marginVertical:2,
+        marginVertical: 6,
         marginHorizontal:10,
-    },titleText:{
-        marginRight:60,
-        marginLeft:10,
+        gap: 12,
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: {width: -2, height: 4},
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+    }, postContainerHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center"
+    }, titleText:{
         fontWeight:'bold',
-
+    }, postExerpt: {
+      fontWeight: "100"
     }
 })
 

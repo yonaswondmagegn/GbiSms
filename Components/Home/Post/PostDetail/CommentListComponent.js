@@ -58,14 +58,14 @@ const CommentListComponent = ({post}) => {
         renderItem={({item})=><EachCommentComponent comment={item} />}
         ListHeaderComponent={()=>(
             <>
-              <Text style={{color:darkMode?'white':'black'}} >Comments</Text>
+              <Text style={{color:darkMode?'white':'black', paddingBottom: 12}} >Comments</Text>
             </>
         )}
         ListFooterComponent={()=>(
             <>
                 {comments?.next &&
-                    <TouchableOpacity onPress={seeMoreHandler}>
-                        <Text>seeMore</Text>
+                  <TouchableOpacity style={styles.commentSeeMore} onPress={seeMoreHandler}>
+                        <Text style={[{color: darkMode ? "white" : "black"}]}>See More</Text>
                     </TouchableOpacity>
                 }
                 {loading && <ActivityIndicator size={50} color={color.darkGolden} />}
@@ -78,4 +78,9 @@ const CommentListComponent = ({post}) => {
 
 export default CommentListComponent
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  commentSeeMore: {
+    marginLeft: 12,
+    marginVertical: 12,
+  }
+})

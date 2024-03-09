@@ -87,25 +87,26 @@ const PostDetail = () => {
   return (
 
     <View style = {{backgroundColor:darkMode?color.darkBackground:'white',flex:1}}>
+        <View style={styles.postDetailsContainer}>
         <FlatList
             data={fragments}
             renderItem={({item})=><EachFragment fragment = {item} />}
             keyExtractor={item=>item?.id?.toString()}
             ListHeaderComponent={()=>(
-                <>
+                <View style={styles.postDetailsHeader}>
                     <TouchableOpacity onPress={()=>navigation.goBack()}>
-                        <View style = {{margin:10}}>
+                        <View>
                             <Ionicons name='arrow-back' color={darkMode?'white':color.dark} size={30} />
                         </View>
                     </TouchableOpacity>
-                    <Text style={[{fontSize:16,fontWeight:'900',marginBottom:20},{color:darkMode?'white':color.dark}]}>{post.title}</Text>
+                    <Text style={[styles.postDetailTitle,{color:darkMode?'white':color.dark}]}>{post.title}</Text>
                     {loading && <ActivityIndicator size={50} color={color.darkGolden} />}
                     {error && <>
                         <ErrorText error="Something Went Wrong Try Again..." />
                         <TryAgainButton fun={fechFragment} />
                              </>
                     }
-                </>
+                </View>
                 )}
                 ListFooterComponent={()=>(
                     <>
@@ -115,7 +116,8 @@ const PostDetail = () => {
                 )}
 
             />
-        <PostComentComponent post={post} setComments={setComments}/>
+    </View>
+    <PostComentComponent post={post} setComments={setComments}/>
     </View>
   )
 }
@@ -123,17 +125,36 @@ const PostDetail = () => {
 export default PostDetail
 
 const styles = StyleSheet.create({
+  postDetailsContainer: {
+    flex: 1,
+    paddingHorizontal: 10,
+  },
+  postDetailsHeader: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "left",
+    alignItems: "center",
+    gap: 8,
+    paddingVertical: 16
+  },
+  postDetailTitle: {
+    fontSize: 24,
+    fontWeight: 900
+  },
     contentText:{
         marginHorizontal:6,
-        fontWeight:"100",
-
+        fontSize: 16,
+        fontWeight: "600",
+        lineHeight: 24,
     },
     fragmentTitleText:{
-        fontSize:16,
-        fontWeight:'800',
-        marginHorizontal:4,
-        textDecorationLine:"underline",
-        marginVertical:20,
-        textDecorationColor:'red'
+        fontSize:20,
+        fontWeight: "900",
+        marginTop:24,
+        marginBottom: 12,
+        borderLeftWidth: 4,
+        borderLeftColor: color.darkGolden,
+        paddingLeft: 8,
+        marginLeft: 4
     }
 })

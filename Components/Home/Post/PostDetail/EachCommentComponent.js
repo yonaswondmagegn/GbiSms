@@ -21,20 +21,20 @@ const EachCommentComponent = ({comment}) => {
             setNumberOfLine(null)
         }
         setShowAll(prev=>!prev)
-        
+
     }
 
     useEffect(()=>{
         numberOfLineHandler()
     },[])
   return (
-    <View style = {styles.container}>
+    <View style = {styles.commentContainer}>
       <View>
         <Image style = {styles.image} source={{uri:comment?.profile?.image} } />
       </View>
       <View style = {styles.textContainer}>
-        <Text style ={styles.username}>{comment?.profile?.user?.username}</Text>
-        <Text numberOfLines={numberOfLine} style = {{color:darkMode?'white':'black'}}>{comment?.text}</Text>
+        <Text style ={[styles.username, {color: darkMode ? "white" : "black"}]}>{comment?.profile?.user?.first_name ? comment?.profile?.user?.first_name : comment?.profile?.user?.username}</Text>
+        <Text numberOfLines={numberOfLine} style = {[{color:darkMode?'#ccc':'#333'}]}>{comment?.text}</Text>
         {comment?.text.length >50 && (
             <TouchableOpacity onPress={showChangeHandler}>
                 {showAll?
@@ -42,7 +42,7 @@ const EachCommentComponent = ({comment}) => {
                 <Text style = {[styles.btnText]}>ShowMore</Text>}
             </TouchableOpacity>
         )}
-        
+
       </View>
     </View>
   )
@@ -51,10 +51,10 @@ const EachCommentComponent = ({comment}) => {
 export default EachCommentComponent
 
 const styles = StyleSheet.create({
-    container:{
+    commentContainer:{
         flexDirection:'row',
-        marginLeft:20,
-        
+        paddingBottom: 24,
+        paddingLeft: 12
     },
     image:{
         width:40,
@@ -63,18 +63,13 @@ const styles = StyleSheet.create({
         marginRight:10
     },
     username:{
-        fontSize:10,
+        fontSize:14,
     },
     textContainer:{
-    borderWidth:1,
-    flex:1,
-    marginRight:10,
-    borderColor:'#CECECE',
-    borderRadius:20,
-    padding:10
+        flex:1,
+        gap: 2
     },
     btnText:{
         color:color.darkGolden
     }
-    
     })

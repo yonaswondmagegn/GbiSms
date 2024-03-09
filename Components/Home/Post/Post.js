@@ -23,7 +23,7 @@ const MainPostScreen = ({navigation})=>{
   const [refresh,setRefresh] = useState(false)
 
   const FechPost = async (fromRefresh)=>{
-  
+
     setOnLoad(true)
     let headers=  {
       'Authorization':`JWT ${auth?.access}`,
@@ -32,7 +32,7 @@ const MainPostScreen = ({navigation})=>{
     }
     try {
       const response = await axios.get(fromRefresh?`${baseUrl}/post/?ordering=-id`:uri,{headers})
-    
+
       if(!post || post?.results.length == 0 || fromRefresh){
         setPost(response.data)
         setOnLoad(false)
@@ -46,12 +46,12 @@ const MainPostScreen = ({navigation})=>{
       setRefresh(false)
       setError(false)
       setOnLoad(false)
-      
-      
+
+
     } catch (error) {
       setRefresh(false)
-      setError('error message from the post')   
-      setOnLoad(false)   
+      setError('error message from the post')
+      setOnLoad(false)
     }
   }
 
@@ -95,14 +95,14 @@ const MainPostScreen = ({navigation})=>{
 
 
   return(
-    <View style = {{backgroundColor:darkMode?color.darkBackground:'white',flex:1}}>
+    <View style = {[{backgroundColor:darkMode?"#252525":'white',flex:1}, styles.postContainer]}>
       {error &&
       <>
       <TryAgainButton fun={getAuthTooken} />
        <ErrorText error="Something Went Wrong Try Again..." />
       </>
        }
-      <View style={[{backgroundColor:darkMode?color.darkBackground:'#E7E7E7'},styles.mainContainer]} >
+      <View style={[{backgroundColor:darkMode?"#252525":'white'},styles.mainContainer]} >
         <FlatList
           data={post?.results}
           renderItem={({ item }) => <EachPost post={item} />}
@@ -120,14 +120,14 @@ const MainPostScreen = ({navigation})=>{
           )}
         />
 
-       
+
     </View>
     <TouchableOpacity
-    style = {styles.addIcon} 
+    style = {styles.addIcon}
     onPress={()=>navigation.navigate('clear-stack-navigation',{screen:'addpost'})}>
         <MaterialCommunityIcons
-         
-          name='feather' size={50} 
+
+          name='feather' size={50}
           color={color.darkGolden} />
     </TouchableOpacity>
    </View>
@@ -148,6 +148,9 @@ const Post = () => {
 export default Post
 
 const styles = StyleSheet.create({
+  postContainer: {
+    paddingTop: 6
+  },
   addIcon:{
     position:'absolute',
     bottom:0,
