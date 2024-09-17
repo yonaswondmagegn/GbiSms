@@ -1,18 +1,14 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View } from "react-native";
+import React from "react";
 
 const Screen = (props) => {
-  return (
-    <View style = {styles.container}>
-      {props.children}
-    </View>
-  )
-}
+  return <View style={styles.container}>{props.children}</View>;
+};
 
-export default Screen
+export default Screen;
 
 const styles = StyleSheet.create({
-    container:{
-        marginTop:20
-    }
-})
+  container: {
+    marginTop: 20,
+  },
+});
