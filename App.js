@@ -1,135 +1,26 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useRef,
-} from "react";
+import { StyleSheet, View, Text} from "react-native";
+import React, { useEffect, useState, useRef } from "react";
 import * as SecureStorage from "expo-secure-store";
 import * as Device from "expo-device";
 import * as Notification from "expo-notifications";
 import Constants from "expo-constants";
-import { useNavigation } from "@react-navigation/native";
+import { jwtDecode } from "jwt-decode";
+import { decode,encode } from "base-64";
+global.atob = decode
+import api from "./api/api";
 
-import Home from "./Components/Home/Home";
-import Profile from "./Components/Profile/Profile";
-import AppNotification from "./Components/Notification/Notification";
-import { baseUrl, color } from "./config";
-import WellComeScreen from "./Components/Auth/WellComeScreen";
-import LoginScreen from "./Components/Auth/LoginScreen";
-import SignUpScreen from "./Components/Auth/SignUpScreen";
+import { Tab, Stack, TopTab } from "./Navigation/coreNavigator";
+
+import MainPageScreens from "./Navigation/MainPageScreens";
+import AuthSceens from "./Navigation/AuthScreens";
+import CustomLoadingScreen from "./AppComponents/CustomLoadingScreen";
 import ClearStackNavigation from "./ClearStackNavigation";
 
 import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
-import {
-  MaterialCommunityIcons,
-  Ionicons,
-  MaterialIcons,
-} from "@expo/vector-icons";
 import NotificationContext from "./Components/Context/NotificationContext";
 
 import DarkModeContext from "./Components/Context/DarkModeContext";
 import AuthContext from "./Components/Context/AuthContext";
-import axios from "axios";
-
-const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
-const TopTab = createMaterialTopTabNavigator();
-
-const MainPageScreens = () => {
-  const { darkMode } = useContext(DarkModeContext);
-
-  return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarShowLabel: false,
-        headerShown: false,
-        tabBarStyle: {
-          backgroundColor: darkMode ? color.darkBackground : "white",
-          borderTopWidth: 0,
-        },
-      }}
-    >
-      <Tab.Screen
-        name="mainHome"
-        component={Home}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <MaterialCommunityIcons
-              name="church"
-              color={focused ? color.activeGolden : color.darkGolden}
-              size={focused ? 30 : 20}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="mainNotification"
-        component={AppNotification}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <MaterialCommunityIcons
-              name="bell"
-              color={focused ? color.activeGolden : color.darkGolden}
-              size={focused ? 30 : 20}
-            />
-          ),
-          tabBarBadge: 3,
-        }}
-      />
-      <Tab.Screen
-        name="mainProfile"
-        component={Profile}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <Ionicons
-              name="person-sharp"
-              color={focused ? color.activeGolden : color.darkGolden}
-              size={focused ? 30 : 20}
-            />
-          ),
-        }}
-      />
-    </Tab.Navigator>
-  );
-};
-
-const AuthTopNav = () => {
-  const { darkMode } = useContext(DarkModeContext);
-  return (
-    <TopTab.Navigator
-      style={{ marginTop: 24 }}
-      screenOptions={{
-        tabBarLabelStyle: { color: color.darkGolden },
-        tabBarIndicatorStyle: { backgroundColor: color.darkGolden },
-      }}
-    >
-      <TopTab.Screen
-        name="auth-toptab-signup"
-        component={SignUpScreen}
-        options={{ title: "SignUp" }}
-      />
-      <TopTab.Screen
-        name="auth-toptab-login"
-        component={LoginScreen}
-        options={{ title: "LogIn" }}
-      />
-    </TopTab.Navigator>
-  );
-};
-
-const AuthSceens = () => {
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="wellcomeSceen" component={WellComeScreen} />
-      <Stack.Screen name="auth-main-screen" component={AuthTopNav} />
-    </Stack.Navigator>
-  );
-};
 
 Notification.setNotificationHandler({
   handleNotification: async () => ({
@@ -142,32 +33,102 @@ Notification.setNotificationHandler({
 export default function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [auth, setAuth] = useState(null);
+  const [profile, setProfile] = useState({ADF:'HELLOW MAN'});
   const [authTookns, setAuthTookns] = useState(null);
   const [notificationToken, setNotificationToken] = useState();
   const notificationResponse = useRef();
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [error, setError] = useState();
+  const [isAdmin,setIsAdmin] = useState(false)
 
-  const getAuth = async () => {
-    console.log("getaout runing on teh terminla [....");
+  const getProfile = async (acepted_access_token) => {
+    let acess_token;
+    if(acepted_access_token){
+      acess_token = acepted_access_token
+    }else{
+      const token  = await SecureStorage.getItemAsync('auth')
+      acess_token = JSON.parse(token).access;
+    }
+    
+    const decodedJwt = jwtDecode(acess_token);
+    const id = decodedJwt.user_id;
     try {
-      const authToken = await SecureStorage.getItemAsync("auth");
-      if (authToken) {
-        setAuthTookns(JSON.parse(authToken));
-        let headers = {
-          Authorization: `JWT ${JSON.parse(authToken).access}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        };
-        const currentUserInfo = await axios.get(`${baseUrl}/auth/users/me/`, {
-          headers,
+      const result = await api.get(`profile/?user=${id}`);
+      setProfile(result.data[0]);
+      console.log(result.data,'first profile')
+    } catch (error) {
+      setError(error);
+      console.log(error,'proifle error')
+    }
+  };
+
+  useEffect(() => {
+    checkAuthentication();
+  }, [isAuthenticated]);
+
+  ////////////////////////////////////////////////////////////////////////
+  //////////////     refreshing the token   if THe Access Token Expired   //////////////////////////////
+  /////////////////////////////////////////////////////////////////////////
+  const refreshToken = async () => {
+    const tokens = await SecureStorage.getItemAsync("auth");
+    let parse_tokens = JSON.parse(tokens);
+    const decoded_refresh_token = jwtDecode(parse_tokens.refresh);
+    const current_date = Date.now() / 1000;
+    if (decoded_refresh_token.exp > current_date) {
+      try {
+        const result_tokens = await api.post("auth/jwt/refresh/", {
+          refresh: parse_tokens.refresh,
         });
-        setAuth(currentUserInfo.data);
-        console.log(
-          currentUserInfo.data,
-          "statusdone done done done done done done *********"
-        );
+
+        if (result_tokens) {
+          parse_tokens.access = result_tokens.data.access;
+          await SecureStorage.setItemAsync(
+            "auth",
+            JSON.stringify(parse_tokens)
+          );
+          const decoded_access_token = jwtDecode(parse_tokens)
+          if(decoded_access_token.is_admin){
+            setIsAdmin(true)
+          }
+          getProfile(result_tokens.data.access)
+          setAuthTookns(parse_tokens);
+          setIsAuthenticated(true);
+        }
+      } catch (error) {
+        setIsAuthenticated(false);
+      }
+    }else{
+      setIsAuthenticated(false)
+    }
+  };
+  ////////////////////////////////////////////////////////////////////////
+  //////////////     Cheking if The User iS AUTHENTICATED OR NOT          //////////////////////////////
+  /////////////////////////////////////////////////////////////////////////
+
+  const checkAuthentication = async () => {
+    try {
+      const tokens = await SecureStorage.getItemAsync("auth");
+      if (!tokens) {
+        setIsAuthenticated(false)
+        return;
+      }
+      const access_token = JSON.parse(tokens).access;
+      console.log(access_token,'acessToken')
+      const decoded_token = jwtDecode(access_token);
+      const current_date = Date.now() / 1000;
+      console.log(decoded_token.exp >current_date,'this is the result')
+      if (decoded_token.exp > current_date) {
+        if(decoded_token.is_admin){
+          setIsAdmin(true)
+        }
+        getProfile(access_token)
+        setIsAuthenticated(true);
+      } else {
+        refreshToken(access_token);
       }
     } catch (error) {
-      console.log(error, "error authhhhhhhhhhhhhh");
+      console.log(error,'error')
+      setIsAuthenticated(false);
     }
   };
 
@@ -200,27 +161,29 @@ export default function App() {
       }
     };
     notfi();
-    getAuth();
   }, []);
-
-  useEffect(() => {
-    console.log(notificationToken, authTookns);
-  }, [notificationToken, auth]);
 
   return (
     <NavigationContainer>
       <DarkModeContext.Provider value={{ darkMode, setDarkMode }}>
-        <AuthContext.Provider value={{ auth, authTookns }}>
+        <AuthContext.Provider value={{ authTookns, profile,getProfile,setIsAuthenticated,isAdmin}}>
           <NotificationContext.Provider value={notificationToken}>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
-              <Stack.Screen
+              {isAuthenticated == null && <Stack.Screen
+                name="load_authenticated_screen"
+                component={CustomLoadingScreen}
+              />}
+
+              { isAuthenticated == false && <Stack.Screen
                 name="wellcome-main-container"
                 component={AuthSceens}
-              />
-              <Stack.Screen
+              />}
+
+             {isAuthenticated == true && <Stack.Screen
                 name="main-page-container"
                 component={MainPageScreens}
-              />
+              />}
+
               <Stack.Screen
                 name="clear-stack-navigation"
                 component={ClearStackNavigation}

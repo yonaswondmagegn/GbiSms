@@ -38,7 +38,7 @@ const EachCommentComponent = ({comment}) => {
         {comment?.text.length >50 && (
             <TouchableOpacity onPress={showChangeHandler}>
                 {showAll?
-                <Text style = {[styles.btnText]}>ShowLess</Text>:
+                <Text style = {[styles.btnText,{color:'red'}]}>ShowLess</Text>:
                 <Text style = {[styles.btnText]}>ShowMore</Text>}
             </TouchableOpacity>
         )}
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     flex:1,
     marginRight:10,
     borderColor:'#CECECE',
-    borderRadius:20,
+    borderRadius:2,
     padding:10
     },
     btnText:{

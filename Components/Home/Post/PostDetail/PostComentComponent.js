@@ -7,6 +7,7 @@ import axios from 'axios'
 import ErrorText from '../../../../AppComponents/ErrorText'
 import AuthContext from '../../../Context/AuthContext'
 import { baseUrl, color } from '../../../../config'
+import api from '../../../../api/api'
 
 
 const PostComentComponent = ({post,setComments}) => {
@@ -14,7 +15,7 @@ const PostComentComponent = ({post,setComments}) => {
     const [commentText,setCommentText] = useState()
     const [onProgress,setOnProgress] = useState(false)
     const [error,setError] = useState(false)
-    const {auth} = useContext(AuthContext)
+    const {profile} = useContext(AuthContext)
 
     const onSendHandler = async ()=>{
       
@@ -22,9 +23,9 @@ const PostComentComponent = ({post,setComments}) => {
       setError(false)
       setOnProgress(true)
       try {
-        const result = await axios.post(`${baseUrl}/postcomment/`,{
+        const result = await api.post('postcomment/',{
           text:commentText,
-          user:auth.id,
+          user:profile?.user?.id,
           post:post.id
         })
         setComments(prev=>({...prev,results:[result.data,...prev.results]}))
@@ -32,7 +33,8 @@ const PostComentComponent = ({post,setComments}) => {
 
       } catch (error) {
         setError(true)
-        console.log(error)
+        console.log(error,profile)
+
         setOnProgress(false)
       }
     }

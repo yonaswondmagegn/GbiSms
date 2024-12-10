@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
         backgroundColor:'white',
         marginHorizontal:5,
         marginTop:5,
-        borderRadius:10
+        borderWidth:2,
 
     },
     postImage:{
@@ -61,6 +61,9 @@ const styles = StyleSheet.create({
     },profileContainer:{
         flexDirection:'row',
         alignItems:'center',
+        borderBottomColor:'black',
+        borderBottomWidth:1,
+        paddingBottom:10,
     },profileNameTextCont:{
         marginLeft:10,
         fontSize:10

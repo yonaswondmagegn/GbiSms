@@ -17,6 +17,7 @@ import axios from "axios";
 import AuthContext from "../../../../Context/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 import ErrorText from "../../../../../AppComponents/ErrorText";
+import api from "../../../../../api/api";
 
 
 const AddPost = () => {
@@ -29,7 +30,7 @@ const AddPost = () => {
   const [error,setError] = useState(false)
   const [loading,setLoading] = useState(false)
   const navigtion = useNavigation()
-  const {auth,authTookns} = useContext(AuthContext)
+  const {auth,profile,authTookns} = useContext(AuthContext)
   const [titlText,setTitleText] = useState('')
 
   let FragmentFieldObject = (key)=>({
@@ -253,9 +254,7 @@ const AddPost = () => {
   };
 
   const postToApiHandler = async()=>{
-    console.log(titlText,'title text')
-    console.log(auth,'user')
-    console.log(authTookns,'tookn ')
+
     let  dataArr = []
     let position = 0;
     fragmetns.forEach((fragment,index) => {
@@ -297,20 +296,15 @@ const AddPost = () => {
     let postFullData = {
       title:titlText,
       view: 0,
-      author: auth?.id,
+      author: profile?.user?.id,
       fragments: dataArr
   }
-  console.log(postFullData,'full data')
-  let headers=  {
-    'Authorization':`JWT ${authTookns.access}`,
-    'Accept': 'application/json',
-    'Content-Type': 'application/json',
-  }
+
 
   try {
     setError(false)
     setLoading(true)
-    const result = await axios.post(`${baseUrl}/post/`,postFullData,{headers})
+    const result = await api.post(`/post/`,postFullData)
 
     if(result){
       setLoading(false)
@@ -329,11 +323,6 @@ const AddPost = () => {
   }
 
 
-  const onPushNotficationAcceptHandler =()=>{
-    const asyncCall = async ()=>{
-      const {status} = useSt
-    }
-  }
 
   return (
     <TouchableWithoutFeedback  onPress={()=>{

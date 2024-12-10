@@ -8,4 +8,4 @@ export const  color = {
     darkBackground:"#272727",
     dark:'black',
 }
-export const baseUrl = "http://192.168.248.14:8000"
+export const baseUrl = "http://192.168.246.14:8000"

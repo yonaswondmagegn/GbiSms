@@ -1,16 +1,15 @@
 import { StyleSheet, Text, View,FlatList, TouchableOpacity,ActivityIndicator} from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useContext} from 'react'
 import axios from 'axios'
 import { baseUrl, color } from '../../../../config'
-
 import EachCommentComponent from './EachCommentComponent'
 import PostComentComponent from './PostComentComponent'
 
 const CommentListComponent = ({post}) => {
-    const [comments,setComments] = useState()
     const [commentUrl,setcommentUrl] = useState(`${baseUrl}/postcomment/?ordering=-date&post=${post?.id}`)
     const [loading,setLoading] = useState(false)
     const [error,setError] = useState(false)
+    const [comments,setComments] = useState()
 
     const fechCommentsHandler = async ()=>{
         try {
@@ -23,7 +22,10 @@ const CommentListComponent = ({post}) => {
                     newComent.results = [...prev?.results,...newComent.results]
                     return newComent
                 })
+              
+                console.log('working hire mmmmmmmmmmmmmmmmmmmmmmmmmmmmm')
 
+                setComments(result.data)
             }else{
                 setComments(result.data)
             }
@@ -38,28 +40,26 @@ const CommentListComponent = ({post}) => {
     const seeMoreHandler = ()=>{
         if(comments?.next){
             setcommentUrl(comments?.next)
-            console.log(commentUrl,'from click')
             
         }
+        console.log(commentUrl,'from click')
     }
 
     useEffect(()=>{
         fechCommentsHandler()
-        console.log(comments?.next,'next url')
     },[commentUrl])
 
 
   return (
-    <View>
+    <View  style={{paddingBottom:260}}>
       <FlatList 
         data={comments?.results}
         keyExtractor={item =>item?.id?.toString()}
         renderItem={({item})=><EachCommentComponent comment={item} />}
-        ListHeaderComponent={()=>(
-            <>
-              <PostComentComponent post={post} setComments = {setComments} />
-            </>
-        )}
+       ListHeaderComponent={()=>(
+       <>
+        <PostComentComponent post= {post} comments = {comments} setComments={setComments} />
+       </>)}
         ListFooterComponent={()=>(
             <>
                 {comments?.next &&

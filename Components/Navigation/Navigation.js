@@ -7,11 +7,6 @@ import DarkModeSwitch from '../Settings/DarkModeSwitch'
 const Navigation = () => {
   const {darkMode,setDarkMode} = useContext(DarkModeContext)
 
-  useEffect(()=>{
-    console.log(darkMode)
-  },[darkMode])
-
-
   return (
     <View style={[styles.mainContainer,{backgroundColor:darkMode ?color.darkBackground:'white'}]}>
       <View style = {[styles.container]}>

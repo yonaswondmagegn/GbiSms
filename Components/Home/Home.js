@@ -6,10 +6,12 @@ import GroupScreen from './Groups/GroupScreen'
 import Navigation from '../Navigation/Navigation'
 import {  color } from '../../config'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
-import { MaterialCommunityIcons,Ionicons,MaterialIcons} from '@expo/vector-icons'
+import { Ionicons,MaterialIcons,FontAwesome6} from '@expo/vector-icons'
 import { createStackNavigator } from '@react-navigation/stack'
 import OthersProfile from './Anouncement/OthersProfile'
 import Post from './Post/Post'
+
+
 
 import DarkModeContext from '../Context/DarkModeContext'
 
@@ -23,7 +25,7 @@ const HomeTabNavigatorComponent = ()=>{
       tabBarStyle:{backgroundColor:darkMode?color.darkBackground:'white'},tabBarIndicatorStyle:{backgroundColor:'#8B1A10'}}}>
       <TopNav.Screen name = 'showPostScreen' component={Post} 
         options={{
-          tabBarIcon:({focused})=><Ionicons name="md-newspaper-outline" size={24} color={focused?color.darkGolden:(darkMode?color.smoke:"black")} />}} />
+          tabBarIcon:({focused})=><FontAwesome6 name="newspaper" size={24} color={focused?color.darkGolden:(darkMode?color.smoke:"black")} />}} />
       <TopNav.Screen name='anouncement' component={ShowPostScreen} 
         options={{
           tabBarIcon:({focused})=>focused ?

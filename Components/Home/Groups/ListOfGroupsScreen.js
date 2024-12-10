@@ -26,14 +26,12 @@ const ListOfGroupsScreen = () => {
       
     },[])
   return (
-    <View>
        <FlatList 
        data={group}
        renderItem={({item})=><EachListComponent group={item} />}
        keyExtractor={item =>item?.id?.toString()}
        key = {item=>item?.id}
        />
-    </View>
   )
 }
 

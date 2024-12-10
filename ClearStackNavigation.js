@@ -8,6 +8,8 @@ import {Ionicons,MaterialCommunityIcons} from '@expo/vector-icons'
 import AddPost from './Components/Home/Post/PostDetail/AddPost/AddPost'
 import DetailCalanderScreen from './Components/Notification/DetailCalanderScreen'
 import PostScheduleScreen from './Components/Notification/PostScheduleScreen'
+import PostAnouncment from './Components/Home/Anouncement/PostAnouncment'
+import EditProfile from './Components/Profile/EditProfile'
 
 const Stack = createStackNavigator()
 
@@ -25,7 +27,10 @@ const ClearStackNavigation = () => {
        />
        <Stack.Screen name="detail-calender-screen" component={DetailCalanderScreen} 
        options={{title:"መርሐግብራት",headerTitleStyle:{fontSize:16}}}/>
+       <Stack.Screen name="post-anoouncement-for-admin" component={PostAnouncment} 
+       options={{title:"Post Anouncement",headerTitleStyle:{fontSize:16}}}/>
        <Stack.Screen name = 'post-calender-screen' component={PostScheduleScreen} options={{title:''}} />
+       <Stack.Screen name = 'edit-profile-screen' component={EditProfile} options={{title:''}} />
 
     </Stack.Navigator>
 

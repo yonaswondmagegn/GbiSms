@@ -1,45 +1,46 @@
-import React, { useContext, useState } from "react";
+import React, {  useState,useContext } from "react";
+import AuthContext from "../Context/AuthContext";
 import axios from "axios";
 import { baseUrl } from "../../config";
 import * as SecureStorage from "expo-secure-store";
-import { useNavigation } from "@react-navigation/native";
 import NotificationContext from "../Context/NotificationContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const useAuth = () => {
   const [error, setError] = useState();
   const [signUpLaoding, setSignUpLoading] = useState(false);
   const [loginLoading,setLoginLoading] = useState(false)
-  const navigation = useNavigation();
   const notficationToken = useContext(NotificationContext)
-  console.log(notficationToken,'from authsoon')
+  const {setIsAuthenticated} = useContext(AuthContext)
 
  
 
-  const logIn = async (username, password) => {
+  const logIn = async (phonenumber, password) => {
 
-    if (!username || !password) return;
+    if (!phonenumber || !password) return;
+    let  string_phonenuymber = phonenumber.toString()
+    console.log(string_phonenuymber)
+    if(string_phonenuymber[0] == "0"){
+      string_phonenuymber = string_phonenuymber.slice(1)
+    }
     setLoginLoading(true)
     setError(false)
     try {
       const result = await axios.post(`${baseUrl}/auth/jwt/create/`, {
-        username,
+        phonenumber:parseInt(string_phonenuymber),
         password,
       });
-    
-
       try {
          await SecureStorage.deleteItemAsync('auth')
 
-          const auths = await SecureStorage.setItemAsync(
+          await SecureStorage.setItemAsync(
             "auth",
             JSON.stringify(result.data)
             );
             console.log(result.data.access,'acess data')
-            navigation.navigate("main-page-container");
             setLoginLoading(false)
             setSignUpLoading(false)
+            setIsAuthenticated(true)
       } catch (error) {
         setError(error)
         setLoginLoading(false)
@@ -52,6 +53,7 @@ const useAuth = () => {
     }
   };
 
+  // SignUp Logic
   const signup = async (
     username,
     password,
@@ -63,16 +65,21 @@ const useAuth = () => {
     setError(false)
 
     try {
+      let string_phonenumber = phonenumber.toString()
+      if(string_phonenumber[0] == "0"){
+        string_phonenumber = string_phonenumber.slice(1)
+      }
       const result = await axios.post(`${baseUrl}/auth/users/`, {
         username,
         first_name,
         last_name,
-        phonenumber:phonenumber.substring(1),
+        phonenumber:parseInt(string_phonenumber),
         password,
         deviceToken:notficationToken?.data,
       });
       if (result) {
-        logIn(username, password);
+        logIn(phonenumber, password);
+        setSignUpLoading(false)
       }
     } catch (err) {
       setError(err);
@@ -80,22 +87,9 @@ const useAuth = () => {
     }
   };
 
-  const getTooken = async () => {
-    const tookn = null;
-    // try {
-    //     const result = await SecureStorage.getItemAsync('auth')
-    //     if(result){
-    //         tookn = a
-    //     }else{
-    //         return null
-    //     }
-    // } catch (error) {
-    //     setError(error)
-    // }
-    return "tooken recived";
-  };
 
-  return { logIn, signup, getTooken, error, signUpLaoding,loginLoading };
+
+  return { logIn, signup, error, signUpLaoding,loginLoading };
 };
 
 export default useAuth;

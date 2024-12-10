@@ -25,24 +25,6 @@ const SignUpScreen = ({ navigation }) => {
   const {signup,error,signUpLaoding} = useAuth()
   const {darkMode} = useContext(DarkModeContext)
 
-  const getAuthTooken = async ()=>{
-    try {
-      const result = await SecureStorage.getItemAsync('auth')
-      if(result){
-          let a = JSON.parse(result).access
-          const tooken = jwtDecode(a)
-          console.log(tooken)
-        // console.log(jwtDecode(JSON.parse(result)).access)
-      }
-      
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  useEffect(()=>{
-    getAuthTooken()
-  },[])
 
   return (
     <View>
